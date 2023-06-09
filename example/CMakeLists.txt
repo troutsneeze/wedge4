@@ -1,5 +1,5 @@
 project(example)
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.12)
 
 # Options
 
@@ -42,7 +42,12 @@ add_executable(example ${SOURCES})
 
 # Platform specifics
 
-if(WIN32)
+if(MINGW)
+	set(FLAGS "${FLAGS} -DTGUI6_STATIC -DSHIM4_STATIC -DWEDGE4_STATIC")
+	set_target_properties(example PROPERTIES COMPILE_FLAGS "${FLAGS}")
+	set_target_properties(example PROPERTIES OUTPUT_NAME example)
+	set(LIBS mingw32 wedge4 shim4 tgui6 SDL2main SDL2 FLAC vorbis ogg freetype png16 zlibstatic d3d9 winmm dbghelp shcore msvcrt imm32 setupapi version)
+elseif(WIN32)
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
 	SET(FLAGS "/D_CRT_SECURE_NO_WARNINGS /D_USE_MATH_DEFINES /EHsc /D_WIN32_WINNT=0x501 /MP /W3 /wd4244 /wd4800 /MT")
 	set_target_properties(example PROPERTIES COMPILE_FLAGS "${FLAGS}")
